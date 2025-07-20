@@ -5,7 +5,7 @@ export default function Header() {
   return (
     <header className="w-full shadow-md p-4">
       <div className=" flex items-center justify-start">
-        <h1 className="text-3xl font-bold text-gray-50">
+        <h1 className="text-3xl font-bold text-gray-50 mx-20 my-4">
           FaceTracking Recorder
         </h1>
       </div>

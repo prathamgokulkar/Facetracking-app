@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import * as faceapi from "face-api.js";
 import Header from "./Header";
 import StatusCard from "./StatusCard";
+import styles from "./FaceRecorder.module.css";
 
 export default function FaceRecorder() {
   const videoRef = useRef(null);
@@ -27,7 +28,7 @@ export default function FaceRecorder() {
         ),
       ]);
       setModelsLoaded(true);
-      console.log("✅ Models loaded");
+      console.log("Models loaded");
 
       startVideo();
     };
@@ -84,7 +85,7 @@ export default function FaceRecorder() {
     const canvasStream = canvasRef.current.captureStream();
 
     if (!videoStream) {
-      console.error("🚫 Video stream is not ready");
+      console.error("Video stream is not ready");
       return;
     }
 
@@ -131,8 +132,7 @@ export default function FaceRecorder() {
   return (
     <>
       <Header />
-      <div className="flex flex-col items-center justify-center w-full min-h-screen p-4">
-        {/* Recorder + Status side by side */}
+      <div className="flex flex-col items-center justify-center w-full min-h-screen">
         <div className="flex flex-col md:flex-row items-center justify-center gap-8">
           {/* Video + Canvas */}
           <div className="flex flex-col items-center">
@@ -150,19 +150,18 @@ export default function FaceRecorder() {
               />
             </div>
 
-            {/* Record Button always below video */}
             <div className="mt-4">
               {!recording ? (
                 <button
                   onClick={startRecording}
-                  className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded"
+                  className={`${styles["recorder-button"]}  text-white font-semibold py-2 px-6 rounded`}
                 >
                   Start Recording
                 </button>
               ) : (
                 <button
                   onClick={stopRecording}
-                  className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded"
+                  className={`${styles["recorder-button"]} text-white font-semibold py-2 px-6 rounded`}
                 >
                   Stop Recording
                 </button>
