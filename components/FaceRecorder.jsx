@@ -173,7 +173,7 @@ export default function FaceRecorder() {
           </div>
 
           {/* Status Card */}
-          <div className="relative w-48 h-64 overflow-hidden rounded-xl bg-[#3d3c3d] mt-6 md:mt-0">
+          <div className="hidden md:block  w-48 h-64 overflow-hidden rounded-xl bg-[#3d3c3d] relative">
             <div className="absolute inset-0.5 z-10 bg-[#323132] text-white opacity-90 p-2 rounded-xl flex items-center justify-center">
               <StatusCard
                 isRecording={recording}
