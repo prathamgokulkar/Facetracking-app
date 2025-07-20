@@ -4,6 +4,7 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   color: white;
+  height: 100%;
 }
 
 .matrix-container {

@@ -8,7 +8,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="matrix-container">
+      <body className="matrix-container ">
         <div className="matrix-grid">{children}</div>
       </body>
     </html>

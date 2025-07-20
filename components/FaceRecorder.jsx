@@ -16,6 +16,7 @@ export default function FaceRecorder() {
   const [fps, setFps] = useState(0);
   const lastFrameTime = useRef(Date.now());
 
+  // Load models once
   useEffect(() => {
     const loadModels = async () => {
       const MODEL_URL = "/models";
@@ -28,14 +29,12 @@ export default function FaceRecorder() {
         ),
       ]);
       setModelsLoaded(true);
-      console.log("Models loaded");
-
       startVideo();
     };
-
     loadModels();
   }, []);
 
+  // Access webcam
   const startVideo = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -45,6 +44,7 @@ export default function FaceRecorder() {
     }
   };
 
+  // Face tracking loop
   useEffect(() => {
     const interval = setInterval(async () => {
       if (!videoRef.current || videoRef.current.readyState !== 4) return;
@@ -66,20 +66,23 @@ export default function FaceRecorder() {
         height: video.videoHeight,
       });
 
-      canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       faceapi.draw.drawDetections(canvas, resized);
       faceapi.draw.drawFaceLandmarks(canvas, resized);
+
       setFaceDetected(detections.length > 0);
+
       const now = Date.now();
       const delta = now - lastFrameTime.current;
       lastFrameTime.current = now;
-
       setFps(Math.round(1000 / delta));
     }, 100);
 
     return () => clearInterval(interval);
   }, []);
 
+  // Start Recording
   const startRecording = () => {
     const videoStream = videoRef.current.srcObject;
     const canvasStream = canvasRef.current.captureStream();
@@ -107,23 +110,30 @@ export default function FaceRecorder() {
     };
 
     mediaRecorderRef.current.onstop = () => {
-      setTimeout(() => {
-        const blob = new Blob(recordedChunksRef.current, {
-          type: "video/webm",
-        });
-        const url = URL.createObjectURL(blob);
-        localStorage.setItem("recordedVideo", url);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "face-recording.webm";
-        a.click();
-      }, 100);
+      const blob = new Blob(recordedChunksRef.current, {
+        type: "video/webm",
+      });
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "face-recording.webm";
+      a.click();
+
+      // Save base64 to localStorage
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64data = reader.result;
+        localStorage.setItem("recordedVideoBase64", base64data);
+      };
+      reader.readAsDataURL(blob);
     };
 
     mediaRecorderRef.current.start();
     setRecording(true);
   };
 
+  // Stop Recording
   const stopRecording = () => {
     mediaRecorderRef.current.stop();
     setRecording(false);
@@ -132,36 +142,36 @@ export default function FaceRecorder() {
   return (
     <>
       <Header />
-      <div className="flex flex-col items-center justify-center w-full min-h-screen">
-        <div className="flex flex-col md:flex-row items-center justify-center gap-8">
-          {/* Video + Canvas */}
-          <div className="flex flex-col items-center">
-            <div className="relative w-[640px] h-[480px]">
+      <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-8 w-full max-w-6xl">
+          {/* Video and Canvas Container */}
+          <div className="flex flex-col items-center gap-4">
+            <div className="relative w-[320px] sm:w-[480px] md:w-[640px] h-auto aspect-video">
               <video
                 ref={videoRef}
                 autoPlay
                 muted
                 className="rounded-lg w-full h-full scale-x-[-1]"
               />
-
               <canvas
                 ref={canvasRef}
                 className="absolute top-0 left-0 w-full h-full scale-x-[-1]"
               />
             </div>
 
+            {/* Start/Stop Button (Always Below Video) */}
             <div className="mt-4">
               {!recording ? (
                 <button
                   onClick={startRecording}
-                  className={`${styles["recorder-button"]}  text-white font-semibold py-2 px-6 rounded`}
+                  className={`${styles["recorder-button"]} z-10 text-white font-semibold py-2 px-6 rounded`}
                 >
                   Start Recording
                 </button>
               ) : (
                 <button
                   onClick={stopRecording}
-                  className={`${styles["recorder-button"]} text-white font-semibold py-2 px-6 rounded`}
+                  className={`${styles["recorder-button"]} z-10 text-white font-semibold py-2 px-6 rounded`}
                 >
                   Stop Recording
                 </button>
