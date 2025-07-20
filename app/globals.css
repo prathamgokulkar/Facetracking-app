@@ -6,10 +6,11 @@ body {
   color: white;
 }
 
-body,
 html,
+body,
 #root {
   height: 100%;
+  overflow-x: hidden;
 }
 
 .matrix-container {

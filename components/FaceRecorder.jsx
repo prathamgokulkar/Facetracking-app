@@ -16,7 +16,6 @@ export default function FaceRecorder() {
   const [fps, setFps] = useState(0);
   const lastFrameTime = useRef(Date.now());
 
-  // Load models once
   useEffect(() => {
     const loadModels = async () => {
       const MODEL_URL = "/models";
@@ -34,7 +33,6 @@ export default function FaceRecorder() {
     loadModels();
   }, []);
 
-  // Access webcam
   const startVideo = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -44,7 +42,6 @@ export default function FaceRecorder() {
     }
   };
 
-  // Face tracking loop
   useEffect(() => {
     const interval = setInterval(async () => {
       if (!videoRef.current || videoRef.current.readyState !== 4) return;
@@ -82,7 +79,6 @@ export default function FaceRecorder() {
     return () => clearInterval(interval);
   }, []);
 
-  // Start Recording
   const startRecording = () => {
     const videoStream = videoRef.current.srcObject;
     const canvasStream = canvasRef.current.captureStream();
@@ -120,7 +116,6 @@ export default function FaceRecorder() {
       a.download = "face-recording.webm";
       a.click();
 
-      // Save base64 to localStorage
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64data = reader.result;
@@ -133,7 +128,6 @@ export default function FaceRecorder() {
     setRecording(true);
   };
 
-  // Stop Recording
   const stopRecording = () => {
     mediaRecorderRef.current.stop();
     setRecording(false);
@@ -142,7 +136,7 @@ export default function FaceRecorder() {
   return (
     <>
       <Header />
-      <div className="min-h-screen overflow-y-auto flex flex-col items-center justify-start px-4 py-8">
+      <div className="min-h-screen flex flex-col items-center justify-start px-4 py-8 overflow-y-auto relative">
         <div className="flex flex-col md:flex-row items-center md:items-start justify-center gap-8 w-full max-w-6xl">
           {/* Video + Canvas + Buttons */}
           <div className="flex flex-col items-center gap-4 w-full md:w-auto">
@@ -159,7 +153,6 @@ export default function FaceRecorder() {
               />
             </div>
 
-            {/* Buttons */}
             <div className="mt-4">
               {!recording ? (
                 <button
@@ -180,8 +173,8 @@ export default function FaceRecorder() {
           </div>
 
           {/* Status Card */}
-          <div className="relative drop-shadow-xl w-48 h-64 overflow-hidden rounded-xl bg-[#3d3c3d] mt-6 md:mt-0">
-            <div className="absolute flex items-center justify-center text-white z-[1] opacity-90 rounded-xl inset-0.5 bg-[#323132] p-2">
+          <div className="relative w-48 h-64 overflow-hidden rounded-xl bg-[#3d3c3d] mt-6 md:mt-0">
+            <div className="absolute inset-0.5 z-10 bg-[#323132] text-white opacity-90 p-2 rounded-xl flex items-center justify-center">
               <StatusCard
                 isRecording={recording}
                 modelsLoaded={modelsLoaded}
@@ -189,7 +182,7 @@ export default function FaceRecorder() {
                 fps={fps}
               />
             </div>
-            <div className="absolute w-56 h-48 bg-white blur-[50px] -left-1/2 -top-1/2 opacity-20" />
+            <div className="absolute w-56 h-48 bg-white blur-[50px] -left-1/2 -top-1/2 opacity-20 z-0" />
           </div>
         </div>
       </div>
