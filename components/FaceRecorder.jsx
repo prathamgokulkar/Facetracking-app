@@ -141,12 +141,12 @@ export default function FaceRecorder() {
                 ref={videoRef}
                 autoPlay
                 muted
-                playsInline
-                className="rounded-lg w-full h-full"
+                className="rounded-lg w-full h-full scale-x-[-1]"
               />
+
               <canvas
                 ref={canvasRef}
-                className="absolute top-0 left-0 w-full h-full"
+                className="absolute top-0 left-0 w-full h-full scale-x-[-1]"
               />
             </div>
 
