@@ -142,11 +142,11 @@ export default function FaceRecorder() {
   return (
     <>
       <Header />
-      <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8">
-        <div className="flex flex-col md:flex-row items-center justify-center gap-8 w-full max-w-6xl">
-          {/* Video and Canvas Container */}
-          <div className="flex flex-col items-center gap-4">
-            <div className="relative w-[320px] sm:w-[480px] md:w-[640px] h-auto aspect-video">
+      <div className="min-h-screen overflow-y-auto flex flex-col items-center justify-start px-4 py-8">
+        <div className="flex flex-col md:flex-row items-center md:items-start justify-center gap-8 w-full max-w-6xl">
+          {/* Video + Canvas + Buttons */}
+          <div className="flex flex-col items-center gap-4 w-full md:w-auto">
+            <div className="relative w-[320px] sm:w-[480px] md:w-[640px] aspect-video">
               <video
                 ref={videoRef}
                 autoPlay
@@ -159,7 +159,7 @@ export default function FaceRecorder() {
               />
             </div>
 
-            {/* Start/Stop Button (Always Below Video) */}
+            {/* Buttons */}
             <div className="mt-4">
               {!recording ? (
                 <button
